@@ -9,8 +9,8 @@ uelements provides a functional way of defining custom elements.
 ```jsx
 import { define, useState } from "uelements";
 
-function Counter() {
-	const [value, setValue] = useState(0);
+function Counter({ count = 0 }) {
+	const [value, setValue] = useState(count);
 
 	return (
 		<>
@@ -21,9 +21,11 @@ function Counter() {
 	);
 }
 
-define("my-counter", (el) => (
-	<PalTest count={parseInt(el.getAttribute("count") || "0")} />
-), ["count"]);
+define(
+	"my-counter",
+	(el) => <Counter count={parseInt(el.getAttribute("count") || "0")} />,
+	["count"]
+);
 ```
 
 Courtesy: hooked-elements, preact and swiss
