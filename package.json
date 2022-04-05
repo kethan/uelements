@@ -1,0 +1,63 @@
+{
+	"name": "uelements",
+	"description": "uelements provides a functional way of defining custom elements",
+	"version": "0.0.5",
+	"source": "./src/index.ts",
+	"main": "./dist/uelements.umd.js",
+	"module": "./dist/uelements.es.js",
+	"unpkg": "./dist/uelements.umd.js",
+	"types": "index.d.ts",
+	"files": [
+		"dist/",
+		"example/",
+		"*.d.ts",
+		"README.md"
+	],
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"serve": "vite preview"
+	},
+	"exports": {
+		".": {
+			"import": "./dist/uelements.es.js",
+			"require": "./dist/uelements.umd.js"
+		}
+	},
+	"devDependencies": {
+		"@types/node": "^17.0.23",
+		"typescript": "^4.5.4",
+		"vite": "^2.8.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/kethan/uelements.git"
+	},
+	"keywords": [
+		"functional",
+		"reactive",
+		"declarative",
+		"dom",
+		"custom",
+		"elements",
+		"define",
+		"lifecycle",
+		"web components",
+		"components",
+		"custom element",
+		"hooks",
+		"react",
+		"preact"
+	],
+	"author": "Kethan Surana",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/kethan/uelements/issues"
+	},
+	"homepage": "https://github.com/kethan/uelements#readme",
+	"dependencies": {
+		"hooked-elements": "^2.2.2",
+		"htm": "^3.1.0",
+		"preact": "^10.7.0"
+	}
+}
