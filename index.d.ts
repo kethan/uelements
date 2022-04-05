@@ -145,7 +145,12 @@ export {
     ComponentProps,
     ComponentType,
     FunctionComponent,
-    FunctionalComponent
+    FunctionalComponent,
+    toChildArray,
+    VNode,
+    JSX,
+    isValidElement,
+    Context
 } from "preact";
 export { createContext } from 'preact/compat';
 export {

@@ -1,4 +1,4 @@
-import { h, render, Fragment, createElement } from 'preact';
+import { h, render, Fragment, createElement, toChildArray } from 'preact';
 import { createContext, define as $define, defineAsync as $defineAsync, get, upgrade, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState, whenDefined } from 'hooked-elements';
 import htm from 'htm';
 const html = htm.bind(h);
@@ -53,5 +53,6 @@ export {
     render,
     Fragment,
     createElement,
-    completeAssign
+    completeAssign,
+    toChildArray
 };

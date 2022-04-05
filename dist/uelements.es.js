@@ -59,13 +59,13 @@ function g() {
     });
 }
 function w(n2, l2, u2, i, t2, o2, r2, f, s2, a2) {
-  var h2, v2, p, _2, b2, m2, g2, w2 = i && i.__k || c, A = w2.length;
+  var h2, v2, p, _2, b2, m2, g2, w2 = i && i.__k || c, A2 = w2.length;
   for (u2.__k = [], h2 = 0; h2 < l2.length; h2++)
     if ((_2 = u2.__k[h2] = (_2 = l2[h2]) == null || typeof _2 == "boolean" ? null : typeof _2 == "string" || typeof _2 == "number" || typeof _2 == "bigint" ? y(null, _2, null, null, _2) : Array.isArray(_2) ? y(d, { children: _2 }, null, null, null) : _2.__b > 0 ? y(_2.type, _2.props, _2.key, null, _2.__v) : _2) != null) {
       if (_2.__ = u2, _2.__b = u2.__b + 1, (p = w2[h2]) === null || p && _2.key == p.key && _2.type === p.type)
         w2[h2] = void 0;
       else
-        for (v2 = 0; v2 < A; v2++) {
+        for (v2 = 0; v2 < A2; v2++) {
           if ((p = w2[v2]) && _2.key == p.key && _2.type === p.type) {
             w2[v2] = void 0;
             break;
@@ -74,7 +74,7 @@ function w(n2, l2, u2, i, t2, o2, r2, f, s2, a2) {
         }
       j(n2, _2, p = p || e, t2, o2, r2, f, s2, a2), b2 = _2.__e, (v2 = _2.ref) && p.ref != v2 && (g2 || (g2 = []), p.ref && g2.push(p.ref, null, _2), g2.push(v2, _2.__c || b2, _2)), b2 != null ? (m2 == null && (m2 = b2), typeof _2.type == "function" && _2.__k === p.__k ? _2.__d = s2 = x(_2, s2, n2) : s2 = P(n2, _2, p, w2, b2, s2), typeof u2.type == "function" && (u2.__d = s2)) : s2 && p.__e == s2 && s2.parentNode != n2 && (s2 = k(p));
     }
-  for (u2.__e = m2, h2 = A; h2--; )
+  for (u2.__e = m2, h2 = A2; h2--; )
     w2[h2] != null && (typeof u2.type == "function" && w2[h2].__e != null && w2[h2].__e == u2.__d && (u2.__d = k(i, h2 + 1)), N(w2[h2], w2[h2]));
   if (g2)
     for (h2 = 0; h2 < g2.length; h2++)
@@ -84,6 +84,11 @@ function x(n2, l2, u2) {
   for (var i, t2 = n2.__k, o2 = 0; t2 && o2 < t2.length; o2++)
     (i = t2[o2]) && (i.__ = n2, l2 = typeof i.type == "function" ? x(i, l2, u2) : P(u2, i, i, t2, i.__e, l2));
   return l2;
+}
+function A(n2, l2) {
+  return l2 = l2 || [], n2 == null || typeof n2 == "boolean" || (Array.isArray(n2) ? n2.some(function(n3) {
+    A(n3, l2);
+  }) : l2.push(n2)), l2;
 }
 function P(n2, l2, u2, i, t2, o2) {
   var r2, f, e2;
@@ -146,7 +151,7 @@ function T(n2) {
   this.l[n2.type + true](l.event ? l.event(n2) : n2);
 }
 function j(n2, u2, i, t2, o2, r2, f, e2, c2) {
-  var s2, h2, v2, y2, p, k2, b2, m2, g2, x2, A, P2 = u2.type;
+  var s2, h2, v2, y2, p, k2, b2, m2, g2, x2, A2, P2 = u2.type;
   if (u2.constructor !== void 0)
     return null;
   i.__h != null && (c2 = i.__h, e2 = u2.__e = i.__e, u2.__h = null, r2 = [e2]), (s2 = l.__b) && s2(u2);
@@ -166,7 +171,7 @@ function j(n2, u2, i, t2, o2, r2, f, e2, c2) {
             h2.componentDidUpdate(y2, p, k2);
           });
         }
-        h2.context = x2, h2.props = m2, h2.state = h2.__s, (s2 = l.__r) && s2(u2), h2.__d = false, h2.__v = u2, h2.__P = n2, s2 = h2.render(h2.props, h2.state, h2.context), h2.state = h2.__s, h2.getChildContext != null && (t2 = a(a({}, t2), h2.getChildContext())), v2 || h2.getSnapshotBeforeUpdate == null || (k2 = h2.getSnapshotBeforeUpdate(y2, p)), A = s2 != null && s2.type === d && s2.key == null ? s2.props.children : s2, w(n2, Array.isArray(A) ? A : [A], u2, i, t2, o2, r2, f, e2, c2), h2.base = u2.__e, u2.__h = null, h2.__h.length && f.push(h2), b2 && (h2.__E = h2.__ = null), h2.__e = false;
+        h2.context = x2, h2.props = m2, h2.state = h2.__s, (s2 = l.__r) && s2(u2), h2.__d = false, h2.__v = u2, h2.__P = n2, s2 = h2.render(h2.props, h2.state, h2.context), h2.state = h2.__s, h2.getChildContext != null && (t2 = a(a({}, t2), h2.getChildContext())), v2 || h2.getSnapshotBeforeUpdate == null || (k2 = h2.getSnapshotBeforeUpdate(y2, p)), A2 = s2 != null && s2.type === d && s2.key == null ? s2.props.children : s2, w(n2, Array.isArray(A2) ? A2 : [A2], u2, i, t2, o2, r2, f, e2, c2), h2.base = u2.__e, u2.__h = null, h2.__h.length && f.push(h2), b2 && (h2.__E = h2.__ = null), h2.__e = false;
       } else
         r2 == null && u2.__v === i.__v ? (u2.__k = i.__k, u2.__e = i.__e) : u2.__e = L(i.__e, u2, i, t2, o2, r2, f, c2);
     (s2 = l.diffed) && s2(u2);
@@ -681,4 +686,4 @@ const define = (name, callback, attrs = []) => {
     }
   });
 };
-export { define$1 as $define, defineAsync as $defineAsync, d as Fragment, completeAssign, createContext, v as createElement, define, get, v as h, html, S as render, upgrade, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState, whenDefined };
+export { define$1 as $define, defineAsync as $defineAsync, d as Fragment, completeAssign, createContext, v as createElement, define, get, v as h, html, S as render, A as toChildArray, upgrade, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState, whenDefined };
