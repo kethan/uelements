@@ -1,58 +1,43 @@
-import { h, render, Fragment, createElement, toChildArray } from 'preact';
-import { createContext, define as $define, defineAsync as $defineAsync, get, upgrade, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState, whenDefined } from 'hooked-elements';
-import htm from 'htm';
-const html = htm.bind(h);
+import { define as $define } from 'swiss';
+import { render, h, Fragment, toChildArray, createContext } from "preact";
+import {
+    useState,
+    useReducer,
+    useContext,
+    useRef,
+    useCallback,
+    useMemo,
+    useEffect,
+    useLayoutEffect,
+} from "preact/hooks";
 
-function completeAssign(target: any, ...sources: any[]) {
-    const options = {
-        enumerable: true,
-        configurable: true
+export type Callback = (element: HTMLElement) => void;
+
+const define = (selector: string, props: Record<string, any>, callback: Callback) => {
+    const setup = (CE) => (el: HTMLElement) => {
+        return {
+            update: () => render(callback(el) as any, el)
+        };
     };
-    sources.forEach((source) => {
-        if (source) {
-            Object.keys(source).forEach((prop) => {
-                const descriptor: any = Object.getOwnPropertyDescriptor(source, prop);
-                Object.defineProperty(target, prop, Object.assign(descriptor, options));
-            });
-        }
-    });
-    return target;
-}
-
-const define = (name: string, callback, attrs = []) => {
-    $define(name, {
-        observedAttributes: attrs,
-        attributeChanged() {
-            (this as any).render();
-        },
-        render(element) {
-            const Comp = callback(element);
-            render(Comp, element);
-        }
+    $define(selector, {
+        props,
+        setup
     });
 };
 
 export {
-    createContext,
-    $define,
-    $defineAsync,
     define,
-    get,
-    upgrade,
-    useCallback,
-    useContext,
-    useEffect,
-    useLayoutEffect,
-    useMemo,
-    useReducer,
-    useRef,
-    useState,
-    whenDefined,
-    html,
     h,
     render,
     Fragment,
-    createElement,
-    completeAssign,
+    useState,
+    useReducer,
+    useContext,
+    useRef,
+    useCallback,
+    useMemo,
+    useEffect,
+    useLayoutEffect,
+    createContext,
     toChildArray
 };

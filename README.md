@@ -21,11 +21,10 @@ function Counter({ count = 0 }) {
 	);
 }
 
-define(
-	"my-counter",
-	(el) => <Counter count={parseInt(el.getAttribute("count") || "0")} />,
-	["count"]
-);
+define("my-counter", {count : 0} (el) => (
+	<Counter count={el.count}} />
+));
+
 ```
 
-Courtesy: hooked-elements, preact and swiss
+Courtesy: Preact and swiss
