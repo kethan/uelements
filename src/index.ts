@@ -13,9 +13,10 @@ import {
 
 export type Callback = (element: HTMLElement) => void;
 
-const define = (selector: string, props: Record<string, any>, callback: Callback) => {
-    const setup = (CE) => (el: HTMLElement) => {
+const define = (selector: string, props: Record<string, any>, callback: Callback, cleanUp?: Function) => {
+    const setup = () => (el: HTMLElement) => {
         return {
+            disconnected: () => cleanUp && cleanUp(),
             update: () => render(callback(el) as any, el)
         };
     };

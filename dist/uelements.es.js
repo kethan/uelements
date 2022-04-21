@@ -520,9 +520,10 @@ function k(n2, t2) {
 function w(n2, t2) {
   return typeof t2 == "function" ? t2(n2) : t2;
 }
-const define = (selector, props, callback) => {
-  const setup = (CE) => (el) => {
+const define = (selector, props, callback, cleanUp) => {
+  const setup = () => (el) => {
     return {
+      disconnected: () => cleanUp && cleanUp(),
       update: () => S(callback(el), el)
     };
   };

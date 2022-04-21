@@ -1,5 +1,5 @@
 export type Callback = (element: HTMLElement) => void;
-declare function define(selector: string, props: Record<string, any>, callback: Callback): void;
+declare function define(selector: string, props: Record<string, any>, callback: Callback, cleanUp?: Function): void;
 
 export {
     h,
