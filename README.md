@@ -21,10 +21,12 @@ function Counter({ count = 0 }) {
 	);
 }
 
-define("my-counter", {count : 0} (el) => (
-	<Counter count={el.count}} />
-));
-
+define(
+	"my-counter",
+	(el) => <Counter count={parseInt(el.getAttribute("count") || "0")} />,
+	["count"],
+	() => console.log("counter cleanup")
+);
 ```
 
-Courtesy: Preact and swiss
+Courtesy: Preact and wicked-elements
