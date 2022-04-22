@@ -1,130 +1,198 @@
-var __defProp = Object.defineProperty;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a2, b2) => {
-  for (var prop in b2 || (b2 = {}))
-    if (__hasOwnProp.call(b2, prop))
-      __defNormalProp(a2, prop, b2[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b2)) {
-      if (__propIsEnum.call(b2, prop))
-        __defNormalProp(a2, prop, b2[prop]);
-    }
-  return a2;
+var Lie = typeof Promise === "function" ? Promise : function(fn) {
+  let queue = [], resolved = 0, value;
+  fn(($2) => {
+    value = $2;
+    resolved = 1;
+    queue.splice(0).forEach(then);
+  });
+  return { then };
+  function then(fn2) {
+    return resolved ? setTimeout(fn2, 0, value) : queue.push(fn2), this;
+  }
 };
-function t$2(t2) {
-  return t2.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+const TRUE = true, FALSE = false;
+const QSA$1 = "querySelectorAll";
+function add(node) {
+  this.observe(node, { subtree: TRUE, childList: TRUE });
 }
-const e$2 = [];
-function n$1(n2 = {}, o2 = HTMLElement) {
-  const r2 = class extends o2 {
-    static get observedAttributes() {
-      const e2 = typeof n2.props == "function", o3 = e2 ? Object.getOwnPropertyNames(n2.props()) : Object.keys(n2.props || {});
-      return r2.setups = [e2 && n2.props, ...[...r2.mixins, n2.setup].map((t2) => t2 && t2(r2, n2))], o3.map(t$2);
-    }
-    constructor() {
-      super(), this._mixins = [], r2.setups.forEach((t2) => {
-        let e2;
-        t2 && this._mixins.push(e2 = t2(this) || {}), function(t3, ...e3) {
-          const n3 = { enumerable: true, configurable: true };
-          e3.forEach((e4) => {
-            e4 && Object.keys(e4).forEach((o3) => {
-              const r3 = Object.getOwnPropertyDescriptor(e4, o3);
-              Object.defineProperty(t3, o3, Object.assign(r3, n3));
-            });
-          });
-        }(this, e2);
-      });
-    }
-    connectedCallback() {
-      this._mixins.forEach((t2) => t2.connected && t2.connected());
-    }
-    disconnectedCallback() {
-      this._mixins.forEach((t2) => t2.disconnected && t2.disconnected());
-    }
-    attributeChangedCallback(t2, e2, n3) {
-      this._mixins.forEach((o3) => o3.attributeChanged && o3.attributeChanged(t2, e2, n3));
+const notify = (callback, root, MO) => {
+  const loop = (nodes, added, removed, connected, pass) => {
+    for (let i2 = 0, { length } = nodes; i2 < length; i2++) {
+      const node = nodes[i2];
+      if (pass || QSA$1 in node) {
+        if (connected) {
+          if (!added.has(node)) {
+            added.add(node);
+            removed.delete(node);
+            callback(node, connected);
+          }
+        } else if (!removed.has(node)) {
+          removed.add(node);
+          added.delete(node);
+          callback(node, connected);
+        }
+        if (!pass)
+          loop(node[QSA$1]("*"), added, removed, connected, TRUE);
+      }
     }
   };
-  return r2.base = o2, r2.mixins = [...e$2], r2;
-}
-let o$2 = {};
-function r$2(t2, e2 = {}, r2 = n$1) {
-  let s2;
-  if (e2.name = t2, e2.extends) {
-    const t3 = o$2[e2.extends];
-    s2 = t3 || document.createElement(e2.extends).constructor, s2.extends = t3 ? t3.extends : e2.extends;
+  const observer = new (MO || MutationObserver)((records) => {
+    for (let added = /* @__PURE__ */ new Set(), removed = /* @__PURE__ */ new Set(), i2 = 0, { length } = records; i2 < length; i2++) {
+      const { addedNodes, removedNodes } = records[i2];
+      loop(removedNodes, added, removed, FALSE, FALSE);
+      loop(addedNodes, added, removed, TRUE, FALSE);
+    }
+  });
+  observer.add = add;
+  observer.add(root || document);
+  return observer;
+};
+const QSA = "querySelectorAll";
+const { document: document$1, Element, MutationObserver: MutationObserver$1, Set: Set$1, WeakMap: WeakMap$1 } = self;
+const elements = (element) => QSA in element;
+const { filter } = [];
+var QSAO = (options) => {
+  const live = new WeakMap$1();
+  const drop2 = (elements2) => {
+    for (let i2 = 0, { length } = elements2; i2 < length; i2++)
+      live.delete(elements2[i2]);
+  };
+  const flush2 = () => {
+    const records = observer.takeRecords();
+    for (let i2 = 0, { length } = records; i2 < length; i2++) {
+      parse2(filter.call(records[i2].removedNodes, elements), false);
+      parse2(filter.call(records[i2].addedNodes, elements), true);
+    }
+  };
+  const matches = (element) => element.matches || element.webkitMatchesSelector || element.msMatchesSelector;
+  const notifier = (element, connected) => {
+    let selectors;
+    if (connected) {
+      for (let q, m2 = matches(element), i2 = 0, { length } = query2; i2 < length; i2++) {
+        if (m2.call(element, q = query2[i2])) {
+          if (!live.has(element))
+            live.set(element, new Set$1());
+          selectors = live.get(element);
+          if (!selectors.has(q)) {
+            selectors.add(q);
+            options.handle(element, connected, q);
+          }
+        }
+      }
+    } else if (live.has(element)) {
+      selectors = live.get(element);
+      live.delete(element);
+      selectors.forEach((q) => {
+        options.handle(element, connected, q);
+      });
+    }
+  };
+  const parse2 = (elements2, connected = true) => {
+    for (let i2 = 0, { length } = elements2; i2 < length; i2++)
+      notifier(elements2[i2], connected);
+  };
+  const { query: query2 } = options;
+  const root = options.root || document$1;
+  const observer = notify(notifier, root, MutationObserver$1);
+  const { attachShadow } = Element.prototype;
+  if (attachShadow)
+    Element.prototype.attachShadow = function(init) {
+      const shadowRoot = attachShadow.call(this, init);
+      observer.add(shadowRoot);
+      return shadowRoot;
+    };
+  if (query2.length)
+    parse2(root[QSA](query2));
+  return { drop: drop2, flush: flush2, observer, parse: parse2 };
+};
+const { create, keys } = Object;
+const attributes = /* @__PURE__ */ new WeakMap();
+const lazy = /* @__PURE__ */ new Set();
+const query = [];
+const config = {};
+const defined = {};
+const attributeChangedCallback = (records, o2) => {
+  for (let h2 = attributes.get(o2), i2 = 0, { length } = records; i2 < length; i2++) {
+    const { target, attributeName, oldValue } = records[i2];
+    const newValue = target.getAttribute(attributeName);
+    h2.attributeChanged(attributeName, oldValue, newValue);
   }
-  const c2 = r2(e2, s2);
-  return o$2[t2] = c2, customElements.get(t2) || customElements.define(t2, c2, { extends: s2 ? s2.extends : void 0 }), c2;
-}
-function s$1(t2, e2) {
-  const n2 = __spreadValues({ value: t2, toAttribute: c$2, fromAttribute: i$1, get: (t3, e3 = n2.value) => e3, set: (t3, e3) => e3 }, e2);
-  return n2;
-}
-function c$2(t2, e2) {
-  const n2 = e2.value;
-  return n2 !== false && n2 !== true || (t2 = ""), t2;
-}
-function i$1(t2, e2) {
-  const n2 = e2.value;
-  return n2 === false || n2 === true ? t2 != null : t2 != null && typeof n2 == "number" ? Number(t2) : t2;
-}
-const f$2 = (t2, { props: e2 = {} }) => (t2.propConfigs || (t2.propConfigs = {}, t2.defineProp = p$1), Object.keys(e2).forEach((n2) => t2.defineProp(n2, e2[n2])), l$2);
-function p$1(t2, e2) {
-  (typeof e2 != "object" || e2 === null || Array.isArray(e2)) && (e2 = s$1(e2)), this.propConfigs[t2] = e2;
-  const n2 = { get() {
-    return this.getProp(t2);
-  }, set: e2.set && function(e3) {
-    this.set(t2, e3);
-  }, enumerable: true, configurable: true };
-  Object.defineProperty(this.prototype, t2, n2);
-}
-function l$2(e2) {
-  const { propConfigs: n2 } = e2.constructor, o2 = {};
-  let r2, s2;
-  function u2(t2) {
-    return n2[t2] && n2[t2].get ? n2[t2].get(e2, o2[t2], o2) : o2[t2];
+};
+const set = (value, m2, l2, o2) => {
+  const handler = create(o2, { element: { enumerable: true, value } });
+  for (let i2 = 0, { length } = l2; i2 < length; i2++)
+    value.addEventListener(l2[i2].t, handler, l2[i2].o);
+  m2.set(value, handler);
+  if (handler.init)
+    handler.init();
+  const { observedAttributes } = o2;
+  if (observedAttributes) {
+    const mo = new MutationObserver(attributeChangedCallback);
+    mo.observe(value, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: observedAttributes.map((attributeName) => {
+        if (value.hasAttribute(attributeName))
+          handler.attributeChanged(attributeName, null, value.getAttribute(attributeName));
+        return attributeName;
+      })
+    });
+    attributes.set(mo, handler);
   }
-  function a2(t2, o3, c2) {
-    if (!r2 && o3 !== c2) {
-      s2 = true;
-      const o4 = function(t3) {
-        return t3.replace(/-([a-z])/g, (t4, e3) => e3.toUpperCase());
-      }(t2), r3 = n2[o4];
-      e2[o4] = (r3.fromAttribute || i$1)(c2, r3), s2 = false;
+  return handler;
+};
+const { drop, flush, parse } = QSAO({
+  query,
+  handle(element, connected, selector) {
+    const { m: m2, l: l2, o: o2 } = config[selector];
+    const handler = m2.get(element) || set(element, m2, l2, o2);
+    const method = connected ? "connected" : "disconnected";
+    if (method in handler)
+      handler[method]();
+  }
+});
+const define$1 = (selector, definition) => {
+  if (-1 < query.indexOf(selector))
+    throw new Error("duplicated: " + selector);
+  flush();
+  const listeners = [];
+  const retype = create(null);
+  for (let k2 = keys(definition), i2 = 0, { length } = k2; i2 < length; i2++) {
+    const key = k2[i2];
+    if (/^on/.test(key) && !/Options$/.test(key)) {
+      const options = definition[key + "Options"] || false;
+      const lower = key.toLowerCase();
+      let type = lower.slice(2);
+      listeners.push({ t: type, o: options });
+      retype[type] = key;
+      if (lower !== key) {
+        type = key.slice(2, 3).toLowerCase() + key.slice(3);
+        retype[type] = key;
+        listeners.push({ t: type, o: options });
+      }
     }
   }
-  return { get: u2, set: function(t2, n3) {
-    const o3 = u2(t2);
-    return e2.setProp(t2, n3, o3), e2.requestUpdate(t2, o3);
-  }, getProp: u2, setProp: function(i2, a3) {
-    n2[i2] && n2[i2].set && (a3 = n2[i2].set(e2, a3, o2[i2], o2)), o2[i2] = a3, s2 || function(o3) {
-      r2 = true, function(o4) {
-        const r3 = n2[o4];
-        let s3 = u2(o4);
-        s3 !== void 0 && r3.reflect && (s3 == null || s3 === false ? e2.removeAttribute(t$2(o4)) : (s3 = (r3.toAttribute || c$2)(s3, r3), e2.setAttribute(t$2(o4), "" + s3)));
-      }(o3), r2 = false;
-    }(i2);
-  }, connected: function() {
-    Object.keys(n2).forEach((t2) => {
-      a2(t2, null, e2.getAttribute(t2));
-    });
-  }, attributeChanged: a2 };
-}
-const d$2 = () => (t2) => {
-  let e2, n2, o2 = {}, r2 = t2.getProp;
-  async function s2() {
-    await e2, t2.update && t2.update(o2), o2 = {}, n2 = false;
+  if (listeners.length) {
+    definition.handleEvent = function(event) {
+      this[retype[event.type]](event);
+    };
   }
-  return s2(), { requestUpdate: function(t3, c2) {
-    if (r2(t3) != c2)
-      return o2[t3] = c2, n2 || (n2 = true, e2 = s2()), e2;
-  } };
+  query.push(selector);
+  config[selector] = { m: /* @__PURE__ */ new WeakMap(), l: listeners, o: definition };
+  parse(document.querySelectorAll(selector));
+  whenDefined(selector);
+  if (!lazy.has(selector))
+    defined[selector]._();
 };
-e$2.push(f$2, d$2);
+const whenDefined = (selector) => {
+  if (!(selector in defined)) {
+    let _2, $2 = new Lie(($3) => {
+      _2 = $3;
+    });
+    defined[selector] = { _: _2, $: $2 };
+  }
+  return defined[selector].$;
+};
 var n, l$1, u$1, t$1, o$1, r$1, f$1, e$1 = {}, c$1 = [], s = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
 function a$1(n2, l2) {
   for (var u2 in l2)
@@ -520,16 +588,22 @@ function k(n2, t2) {
 function w(n2, t2) {
   return typeof t2 == "function" ? t2(n2) : t2;
 }
-const define = (selector, props, callback, cleanUp) => {
-  const setup = () => (el) => {
-    return {
-      disconnected: () => cleanUp && cleanUp(),
-      update: () => S(callback(el), el)
-    };
-  };
-  r$2(selector, {
-    props,
-    setup
+const define = (name, callback, attrs = [], cleanup) => {
+  define$1(name, {
+    init() {
+      this.render();
+    },
+    observedAttributes: attrs,
+    attributeChanged() {
+      this.render();
+    },
+    disconnected() {
+      cleanup && cleanup();
+    },
+    render() {
+      let { element } = this;
+      S(callback(element), element);
+    }
   });
 };
 export { d$1 as Fragment, D as createContext, define, v$1 as h, S as render, A$1 as toChildArray, A as useCallback, F as useContext, y as useEffect, d as useLayoutEffect, _ as useMemo, p as useReducer, h as useRef, m as useState };
