@@ -12,7 +12,6 @@ import {
 } from "preact/hooks";
 
 export type Callback = (element: HTMLElement) => void;
-
 const define = (name: string, callback: Callback, attrs: Array<string> = [], cleanup?: Function) => {
     $define(name, {
         init() { (this as any).render(); },
@@ -24,7 +23,8 @@ const define = (name: string, callback: Callback, attrs: Array<string> = [], cle
         //@ts-ignore
         render() {
             let { element } = this as any;
-            render(callback(element) as any, element);
+            //@ts-ignore
+            render(h(() => callback(element)) as any, element);
         }
     });
 };

@@ -602,8 +602,8 @@ const define = (name, callback, attrs = [], cleanup) => {
     },
     render() {
       let { element } = this;
-      S(callback(element), element);
+      S(v$1(() => callback(element)), element);
     }
   });
 };
-export { d$1 as Fragment, D as createContext, define, v$1 as h, S as render, A$1 as toChildArray, A as useCallback, F as useContext, y as useEffect, d as useLayoutEffect, _ as useMemo, p as useReducer, h as useRef, m as useState };
+export { define$1 as $define, d$1 as Fragment, D as createContext, define, v$1 as h, S as render, A$1 as toChildArray, A as useCallback, F as useContext, y as useEffect, d as useLayoutEffect, _ as useMemo, p as useReducer, h as useRef, m as useState };
