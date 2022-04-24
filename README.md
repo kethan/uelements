@@ -29,4 +29,4 @@ define(
 );
 ```
 
-Courtesy: Preact and wicked-elements
+Courtesy: Preact and uwhen

@@ -1,4 +1,4 @@
-import { define as $define } from 'wicked-elements';
+import when from 'uwhen';
 import { render, h, Fragment, toChildArray, createContext } from "preact";
 import {
     useState,
@@ -13,25 +13,20 @@ import {
 
 export type Callback = (element: HTMLElement) => void;
 const define = (name: string, callback: Callback, attrs: Array<string> = [], cleanup?: Function) => {
-    $define(name, {
-        init() { (this as any).render(); },
-        observedAttributes: attrs,
-        attributeChanged() {
-            (this as any).render();
-        },
-        disconnected() { cleanup && cleanup(); },
+    const _render = (el: HTMLElement) =>
         //@ts-ignore
-        render() {
-            let { element } = this as any;
-            //@ts-ignore
-            render(h(() => callback(element)) as any, element);
-        }
-    });
+        render(h(() => callback(el)) as any, el);
+    when(name, (el) => ({
+        connected: () => _render(el),
+        disconnected: () => { cleanup && cleanup(); },
+        attributeChanged: () => { _render(el); },
+        observedAttributes: attrs
+    }))
 };
 
 export {
     define,
-    $define,
+    when,
     h,
     render,
     Fragment,

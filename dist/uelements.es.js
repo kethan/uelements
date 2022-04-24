@@ -1,198 +1,56 @@
-var Lie = typeof Promise === "function" ? Promise : function(fn) {
-  let queue = [], resolved = 0, value;
-  fn(($2) => {
-    value = $2;
-    resolved = 1;
-    queue.splice(0).forEach(then);
-  });
-  return { then };
-  function then(fn2) {
-    return resolved ? setTimeout(fn2, 0, value) : queue.push(fn2), this;
-  }
-};
-const TRUE = true, FALSE = false;
-const QSA$1 = "querySelectorAll";
-function add(node) {
-  this.observe(node, { subtree: TRUE, childList: TRUE });
-}
-const notify = (callback, root, MO) => {
-  const loop = (nodes, added, removed, connected, pass) => {
-    for (let i2 = 0, { length } = nodes; i2 < length; i2++) {
-      const node = nodes[i2];
-      if (pass || QSA$1 in node) {
-        if (connected) {
-          if (!added.has(node)) {
-            added.add(node);
-            removed.delete(node);
-            callback(node, connected);
-          }
-        } else if (!removed.has(node)) {
-          removed.add(node);
-          added.delete(node);
-          callback(node, connected);
-        }
-        if (!pass)
-          loop(node[QSA$1]("*"), added, removed, connected, TRUE);
-      }
-    }
-  };
-  const observer = new (MO || MutationObserver)((records) => {
-    for (let added = /* @__PURE__ */ new Set(), removed = /* @__PURE__ */ new Set(), i2 = 0, { length } = records; i2 < length; i2++) {
-      const { addedNodes, removedNodes } = records[i2];
-      loop(removedNodes, added, removed, FALSE, FALSE);
-      loop(addedNodes, added, removed, TRUE, FALSE);
-    }
-  });
-  observer.add = add;
-  observer.add(root || document);
-  return observer;
-};
-const QSA = "querySelectorAll";
-const { document: document$1, Element, MutationObserver: MutationObserver$1, Set: Set$1, WeakMap: WeakMap$1 } = self;
-const elements = (element) => QSA in element;
-const { filter } = [];
-var QSAO = (options) => {
-  const live = new WeakMap$1();
-  const drop2 = (elements2) => {
-    for (let i2 = 0, { length } = elements2; i2 < length; i2++)
-      live.delete(elements2[i2]);
-  };
-  const flush2 = () => {
-    const records = observer.takeRecords();
-    for (let i2 = 0, { length } = records; i2 < length; i2++) {
-      parse2(filter.call(records[i2].removedNodes, elements), false);
-      parse2(filter.call(records[i2].addedNodes, elements), true);
-    }
-  };
-  const matches = (element) => element.matches || element.webkitMatchesSelector || element.msMatchesSelector;
-  const notifier = (element, connected) => {
-    let selectors;
-    if (connected) {
-      for (let q, m2 = matches(element), i2 = 0, { length } = query2; i2 < length; i2++) {
-        if (m2.call(element, q = query2[i2])) {
-          if (!live.has(element))
-            live.set(element, new Set$1());
-          selectors = live.get(element);
-          if (!selectors.has(q)) {
-            selectors.add(q);
-            options.handle(element, connected, q);
-          }
+const whenCallbacks = /* @__PURE__ */ new Set();
+const mapElements = /* @__PURE__ */ new Map();
+const mutationObserver = new window.MutationObserver((mutationsList) => {
+  for (const mutation of mutationsList) {
+    if (mutation.type === "attributes") {
+      const { target, attributeName, oldValue } = mutation;
+      if (mapElements.has(target)) {
+        let [attributeChanged, observedAttributes] = mapElements.get(target);
+        if (observedAttributes.includes(attributeName) || observedAttributes.length == 0) {
+          const value = target.getAttribute(attributeName);
+          attributeChanged(attributeName, oldValue, value, target);
         }
       }
-    } else if (live.has(element)) {
-      selectors = live.get(element);
-      live.delete(element);
-      selectors.forEach((q) => {
-        options.handle(element, connected, q);
-      });
     }
-  };
-  const parse2 = (elements2, connected = true) => {
-    for (let i2 = 0, { length } = elements2; i2 < length; i2++)
-      notifier(elements2[i2], connected);
-  };
-  const { query: query2 } = options;
-  const root = options.root || document$1;
-  const observer = notify(notifier, root, MutationObserver$1);
-  const { attachShadow } = Element.prototype;
-  if (attachShadow)
-    Element.prototype.attachShadow = function(init) {
-      const shadowRoot = attachShadow.call(this, init);
-      observer.add(shadowRoot);
-      return shadowRoot;
-    };
-  if (query2.length)
-    parse2(root[QSA](query2));
-  return { drop: drop2, flush: flush2, observer, parse: parse2 };
-};
-const { create, keys } = Object;
-const attributes = /* @__PURE__ */ new WeakMap();
-const lazy = /* @__PURE__ */ new Set();
-const query = [];
-const config = {};
-const defined = {};
-const attributeChangedCallback = (records, o2) => {
-  for (let h2 = attributes.get(o2), i2 = 0, { length } = records; i2 < length; i2++) {
-    const { target, attributeName, oldValue } = records[i2];
-    const newValue = target.getAttribute(attributeName);
-    h2.attributeChanged(attributeName, oldValue, newValue);
   }
-};
-const set = (value, m2, l2, o2) => {
-  const handler = create(o2, { element: { enumerable: true, value } });
-  for (let i2 = 0, { length } = l2; i2 < length; i2++)
-    value.addEventListener(l2[i2].t, handler, l2[i2].o);
-  m2.set(value, handler);
-  if (handler.init)
-    handler.init();
-  const { observedAttributes } = o2;
-  if (observedAttributes) {
-    const mo = new MutationObserver(attributeChangedCallback);
-    mo.observe(value, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: observedAttributes.map((attributeName) => {
-        if (value.hasAttribute(attributeName))
-          handler.attributeChanged(attributeName, null, value.getAttribute(attributeName));
-        return attributeName;
-      })
-    });
-    attributes.set(mo, handler);
-  }
-  return handler;
-};
-const { drop, flush, parse } = QSAO({
-  query,
-  handle(element, connected, selector) {
-    const { m: m2, l: l2, o: o2 } = config[selector];
-    const handler = m2.get(element) || set(element, m2, l2, o2);
-    const method = connected ? "connected" : "disconnected";
-    if (method in handler)
-      handler[method]();
-  }
+  whenCallbacks.forEach((callback) => callback());
 });
-const define$1 = (selector, definition) => {
-  if (-1 < query.indexOf(selector))
-    throw new Error("duplicated: " + selector);
-  flush();
-  const listeners = [];
-  const retype = create(null);
-  for (let k2 = keys(definition), i2 = 0, { length } = k2; i2 < length; i2++) {
-    const key = k2[i2];
-    if (/^on/.test(key) && !/Options$/.test(key)) {
-      const options = definition[key + "Options"] || false;
-      const lower = key.toLowerCase();
-      let type = lower.slice(2);
-      listeners.push({ t: type, o: options });
-      retype[type] = key;
-      if (lower !== key) {
-        type = key.slice(2, 3).toLowerCase() + key.slice(3);
-        retype[type] = key;
-        listeners.push({ t: type, o: options });
-      }
-    }
-  }
-  if (listeners.length) {
-    definition.handleEvent = function(event) {
-      this[retype[event.type]](event);
-    };
-  }
-  query.push(selector);
-  config[selector] = { m: /* @__PURE__ */ new WeakMap(), l: listeners, o: definition };
-  parse(document.querySelectorAll(selector));
-  whenDefined(selector);
-  if (!lazy.has(selector))
-    defined[selector]._();
-};
-const whenDefined = (selector) => {
-  if (!(selector in defined)) {
-    let _2, $2 = new Lie(($3) => {
-      _2 = $3;
+mutationObserver.observe(document, {
+  attributes: true,
+  childList: true,
+  subtree: true,
+  attributeOldValue: true
+});
+function when(selector, callback) {
+  setTimeout(check);
+  whenCallbacks.add(check);
+  function check() {
+    document.querySelectorAll(selector).forEach((element) => {
+      if (!mapElements.has(element)) {
+        const { connected = () => {
+        }, disconnected = () => {
+        }, attributeChanged = () => {
+        }, observedAttributes = [] } = callback(element);
+        mapElements.set(element, [attributeChanged, observedAttributes]);
+        connected();
+        removed(selector, element, () => disconnected());
+      } else
+        return;
     });
-    defined[selector] = { _: _2, $: $2 };
   }
-  return defined[selector].$;
-};
+}
+function removed(selector, target, callback) {
+  setTimeout(check);
+  whenCallbacks.add(check);
+  function check() {
+    if (target && document.contains(target) && target.matches(selector)) {
+      return;
+    }
+    mapElements.delete(target);
+    whenCallbacks.delete(check);
+    callback();
+  }
+}
 var n, l$1, u$1, t$1, o$1, r$1, f$1, e$1 = {}, c$1 = [], s = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
 function a$1(n2, l2) {
   for (var u2 in l2)
@@ -589,21 +447,16 @@ function w(n2, t2) {
   return typeof t2 == "function" ? t2(n2) : t2;
 }
 const define = (name, callback, attrs = [], cleanup) => {
-  define$1(name, {
-    init() {
-      this.render();
-    },
-    observedAttributes: attrs,
-    attributeChanged() {
-      this.render();
-    },
-    disconnected() {
+  const _render = (el) => S(v$1(() => callback(el)), el);
+  when(name, (el) => ({
+    connected: () => _render(el),
+    disconnected: () => {
       cleanup && cleanup();
     },
-    render() {
-      let { element } = this;
-      S(v$1(() => callback(element)), element);
-    }
-  });
+    attributeChanged: () => {
+      _render(el);
+    },
+    observedAttributes: attrs
+  }));
 };
-export { define$1 as $define, d$1 as Fragment, D as createContext, define, v$1 as h, S as render, A$1 as toChildArray, A as useCallback, F as useContext, y as useEffect, d as useLayoutEffect, _ as useMemo, p as useReducer, h as useRef, m as useState };
+export { d$1 as Fragment, D as createContext, define, v$1 as h, S as render, A$1 as toChildArray, A as useCallback, F as useContext, y as useEffect, d as useLayoutEffect, _ as useMemo, p as useReducer, h as useRef, m as useState, when };
