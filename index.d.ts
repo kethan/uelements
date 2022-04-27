@@ -1,6 +1,12 @@
 export type Callback = (element: HTMLElement) => void;
 declare function define(selector: string, callback: Callback, attrs: Array<string>, cleanUp?: Function): void;
 
+import * as sinuous from './src/sinuous';
+
+declare module 'uelements/sinuous' {
+    export = sinuous;
+}
+
 export {
     h,
     render,

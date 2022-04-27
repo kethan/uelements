@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
+    "target": "es5",
     "module": "es6",
     "lib": [
       "ESNext",
@@ -16,11 +16,14 @@
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "outDir": "dist",
     "noImplicitAny": false
   },
   "include": [
-    "src"
+    "src",
+    "src/sinuous/index.d.ts",
+    "src/uelements/index.d.ts",
+    "index.d.ts"
   ]
 }
