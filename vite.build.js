@@ -1,14 +1,14 @@
-const { resolve, parse } = require("path");
-const fs = require('fs');
-const { build } = require('vite');
+import { resolve, parse } from "path";
+import { readdirSync } from 'fs';
+import { build } from 'vite';
 const imports = [];
 
 ; (async () => {
-    fs.readdirSync(resolve(__dirname, './src')).forEach(file => {
+    readdirSync(resolve(process.cwd(), './src')).forEach(file => {
         console.log(file);
         imports.push({
             name: parse(file).name,
-            entry: resolve(__dirname, './src', file),
+            entry: resolve(process.cwd(), './src', file),
         });
     });
     for await (const item of imports) {

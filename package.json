@@ -1,13 +1,14 @@
 {
 	"name": "uelements",
 	"description": "uelements provides a functional way of defining custom elements",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"source": "./src/index.ts",
 	"main": "./dist/uelements.umd.js",
 	"module": "./dist/uelements.es.js",
 	"umd:main": "./dist/uelements.umd.js",
 	"unpkg": "./dist/uelements.iife.js",
-	"types": "index.d.ts",
+	"types": "./src/uelements/index.d.ts",
+	"type": "module",
 	"files": [
 		"dist/",
 		"example/",

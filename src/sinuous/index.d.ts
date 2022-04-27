@@ -1,2 +1,1 @@
-declare function sinuous(): void;
-export default sinuous;
+export default function sinuous(): void;;

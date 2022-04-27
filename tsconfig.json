@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "CommonJS",
+    "target": "ES2015",
+    "module": "es6",
     "lib": [
       "ESNext",
       "DOM"
@@ -21,9 +21,6 @@
     "noImplicitAny": false
   },
   "include": [
-    "src/*.ts",
-    "src/*.d.ts",
-    "index.d.ts",
-    "src/uelements/index.ts",
+    "src"
   ]
 }
