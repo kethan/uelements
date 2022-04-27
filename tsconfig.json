@@ -6,7 +6,7 @@
       "ESNext",
       "DOM"
     ],
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
@@ -25,5 +25,13 @@
     "src/sinuous/index.d.ts",
     "src/uelements/index.d.ts",
     "index.d.ts"
-  ]
+  ],
+  "paths": {
+    "sinuous": [
+      "src/sinuous/index.d.ts"
+    ],
+    "uelements": [
+      "src/uelements/index.d.ts"
+    ]
+  }
 }
