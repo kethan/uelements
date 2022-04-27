@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "es5",
     "module": "CommonJS",
     "lib": [
       "ESNext",
@@ -24,6 +24,6 @@
     "src/*.ts",
     "src/*.d.ts",
     "index.d.ts",
-    "src/index.ts",
+    "src/uelements/index.ts",
   ]
 }

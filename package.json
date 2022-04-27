@@ -1,11 +1,12 @@
 {
 	"name": "uelements",
 	"description": "uelements provides a functional way of defining custom elements",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"source": "./src/index.ts",
 	"main": "./dist/uelements.umd.js",
 	"module": "./dist/uelements.es.js",
-	"unpkg": "./dist/uelements.umd.js",
+	"umd:main": "./dist/uelements.umd.js",
+	"unpkg": "./dist/uelements.iife.js",
 	"types": "index.d.ts",
 	"files": [
 		"dist/",
@@ -15,13 +16,25 @@
 	],
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc && vite build",
+		"build": "node vite.build.js",
 		"serve": "vite preview"
 	},
 	"exports": {
 		".": {
+			"types": "./src/index.d.ts",
+			"browser": "./dist/uelements.es.js",
+			"umd": "./dist/uelements.umd.js",
 			"import": "./dist/uelements.es.js",
-			"require": "./dist/uelements.umd.js"
+			"require": "./dist/uelements.umd.js",
+			"default": "./dist/uelements.cjs.js"
+		},
+		"./sinuous": {
+			"types": "./src/sinuous/index.d.ts",
+			"browser": "./dist/sinuous.es.js",
+			"umd": "./dist/sinuous.umd.js",
+			"import": "./dist/sinuous.es.js",
+			"require": "./dist/sinuous.umd.js",
+			"default": "./dist/sinuous.cjs.js"
 		}
 	},
 	"devDependencies": {

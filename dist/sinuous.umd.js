@@ -1,0 +1,1 @@
+(function(e,n){typeof exports=="object"&&typeof module!="undefined"?module.exports=n():typeof define=="function"&&define.amd?define(n):(e=typeof globalThis!="undefined"?globalThis:e||self,e.sinuous=n())})(this,function(){"use strict";function e(){return"sinuous"}return e});
