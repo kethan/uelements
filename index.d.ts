@@ -1,5 +1,7 @@
+import { ComponentChildren } from "preact";
 export type Callback = (element: HTMLElement) => void;
 declare function define(selector: string, callback: Callback, attrs: Array<string>, cleanUp?: Function): void;
+declare function lazy<T>(loader: () => Promise<{ default: T } | T>, fallback?: ComponentChildren): T;
 
 export {
     h,
@@ -34,4 +36,4 @@ export {
     useLayoutEffect
 } from 'preact/hooks';
 
-export { define };
+export { define, lazy };
