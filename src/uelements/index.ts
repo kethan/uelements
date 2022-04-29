@@ -11,6 +11,7 @@ import {
     useLayoutEffect,
 } from "preact/hooks";
 
+import lazy from 'preact-lazy';
 export type Callback = (element: HTMLElement) => void;
 const define = (name: string, callback: Callback, attrs: Array<string> = [], cleanup?: Function) => {
     const _r = (el: HTMLElement) =>
@@ -38,5 +39,6 @@ export {
     useEffect,
     useLayoutEffect,
     createContext,
-    toChildArray
+    toChildArray,
+    lazy
 };
