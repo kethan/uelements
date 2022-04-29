@@ -1,7 +1,7 @@
 {
 	"name": "uelements",
 	"description": "uelements provides a functional way of defining custom elements",
-	"version": "0.2.7",
+	"version": "0.2.8",
 	"source": "./src/index.ts",
 	"main": "./dist/uelements.umd.js",
 	"module": "./dist/uelements.es.js",
@@ -69,6 +69,7 @@
 	"homepage": "https://github.com/kethan/uelements#readme",
 	"dependencies": {
 		"preact": "^10.7.1",
+		"sinuous": "^0.28.1",
 		"uwhen": "^0.2.2"
 	}
 }
