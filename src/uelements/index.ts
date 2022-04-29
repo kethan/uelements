@@ -1,6 +1,5 @@
 import when from 'uwhen';
 import { render, h, Fragment, toChildArray, createContext } from "preact";
-import { Suspense, lazy } from 'preact/compat';
 import {
     useState,
     useReducer,
@@ -39,7 +38,5 @@ export {
     useEffect,
     useLayoutEffect,
     createContext,
-    toChildArray,
-    Suspense,
-    lazy,
+    toChildArray
 };

@@ -1,11 +1,6 @@
 export type Callback = (element: HTMLElement) => void;
 declare function define(selector: string, callback: Callback, attrs: Array<string>, cleanUp?: Function): void;
 
-
-declare module 'uelements/sinuous' {
-    export function sinuous(element: HTMLElement, callback: Callback): void;
-}
-
 export {
     h,
     render,
@@ -27,11 +22,6 @@ export {
     Context,
     createContext
 } from "preact";
-
-export {
-    Suspense,
-    lazy
-} from 'preact/compat'
 
 export {
     useState,
